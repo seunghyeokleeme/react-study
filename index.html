@@ -15,71 +15,52 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      class GuGuDan extends React.Component {
-        constructor(props) {
-          super(props);
-          this.state = {
-            first: Math.ceil(Math.random() * 9),
-            second: Math.ceil(Math.random() * 9),
-            value: "",
-            result: "",
-          };
-        }
+      const GuGuDan = () => {
+        const [first, setFrist] = React.useState(Math.ceil(Math.random() * 9));
+        const [second, setSecond] = React.useState(
+          Math.ceil(Math.random() * 9)
+        );
+        const [value, setValue] = React.useState("");
+        const [result, setResult] = React.useState("");
+        const inputRef = React.useRef(null);
 
-        onSubmit = (event) => {
+        const onChangeInput = (event) => {
+          setValue(event.target.value);
+        };
+
+        const onSubmit = (event) => {
           event.preventDefault();
-          if (
-            parseInt(this.state.value, 10) ===
-            this.state.first * this.state.second
-          ) {
-            this.setState((prevState) => {
-              return {
-                result: "정답: " + prevState.value,
-                first: Math.ceil(Math.random() * 9),
-                second: Math.ceil(Math.random() * 9),
-                value: "",
-              };
-            });
-            this.input.focus();
+          if (parseInt(value, 10) === first * second) {
+            setResult("정답" + value);
+            setFrist(Math.ceil(Math.random() * 9));
+            setSecond(Math.ceil(Math.random() * 9));
+            setValue("");
+            inputRef.current.focus(); // 함수 컨포넌트 ref 사용법
           } else {
-            this.setState({
-              result: "땡",
-              value: "",
-            });
+            setResult("땡");
+            setValue("");
+            inputRef.current.focus();
           }
         };
 
-        onChange = (event) => {
-          this.setState({ value: event.target.value }); // setState를 하면 랜더링한다. -> 즉 render 안에 있는 함수를 밖으로 빼주는 이유
-        };
-
-        input;
-
-        onRefInput = (c) => {
-          this.input = c;
-        };
-
-        render() {
-          console.log("랜더링");
-          return (
-            <React.Fragment>
-              <div>
-                {this.state.first} 곱하기 {this.state.second}는?
-              </div>
-              <form onSubmit={this.onSubmit}>
-                <input
-                  ref={this.onRefInput}
-                  type="number"
-                  value={this.state.value}
-                  onChange={this.onChange}
-                />
-                <button type="submit">입력</button>
-              </form>
-              <div>{this.state.result}</div>
-            </React.Fragment>
-          );
-        }
-      }
+        return (
+          <React.Fragment>
+            <div>
+              {first} 곱하기 {second}는?
+            </div>
+            <form onSubmit={onSubmit}>
+              <input
+                ref={inputRef}
+                type="number"
+                value={value}
+                onChange={onChangeInput}
+              />
+              <button type="submit">입력!</button>
+            </form>
+            <div>{result}</div>
+          </React.Fragment>
+        );
+      };
     </script>
     <script type="text/babel">
       ReactDOM.createRoot(document.querySelector("#root")).render(<GuGuDan />);
