@@ -3,21 +3,21 @@ const { useState, useRef } = React;
 
 const WordRelay = () => {
   const [word, setWord] = useState("이승혁");
-  const [value, setValue] = useState("");
   const [result, setResult] = useState("");
   const inputRef = useRef(null);
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    if (word[word.length - 1] === value[0]) {
+    console.log(e.target.children.word.value);
+    if (word[word.length - 1] === e.target.children.word.value[0]) {
       setResult("딩동댕");
-      setWord(value);
-      setValue("");
+      setWord(e.target.children.word.value);
+      e.target.children.word.value = "";
       inputRef.current.focus();
     } else {
       setResult("땡");
-      setValue("");
       inputRef.current.focus();
+      e.target.children.word.value = "";
     }
   };
 
@@ -29,14 +29,7 @@ const WordRelay = () => {
     <>
       <div>{word}</div>
       <form onSubmit={onSubmitForm}>
-        <label htmlFor="wordInput">글자를 입력하세요.</label>
-        <input
-          id="wordInput"
-          className="wordInput"
-          ref={inputRef}
-          value={value}
-          onChange={onChangeInput}
-        />
+        <input id="word" ref={inputRef} />
         <button type="submit">입력</button>
       </form>
       <div>{result}</div>
